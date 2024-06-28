@@ -1,7 +1,10 @@
 function doGet(e) {
   const page = e.parameter.page;
   const fileName = getFileName(page);
-  const htmlOutput = HtmlService.createHtmlOutputFromFile(fileName);
+  const template = HtmlService.createTemplateFromFile(fileName);
+  template.url = ScriptApp.getService().getUrl();
+
+  const htmlOutput = template.evaluate();
   htmlOutput.setTitle('ASP BLOG');
   htmlOutput.setFaviconUrl('https://i.imgur.com/J56lAbf.png');
   return htmlOutput;
@@ -12,8 +15,17 @@ function doGet(e) {
  * @return {String} - HTML file name to open
  */
 function getFileName(page){
-  switch(page){
-    default:
-      return 'index';
+  const presetPageList = [
+    'articleDetail',
+    'editArticle'
+  ];
+
+  if(page === undefined){
+    return 'index';
   }
+
+  if(presetPageList.includes(page)){
+    return page;
+  }
+  return 'notFound';
 }

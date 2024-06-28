@@ -2,7 +2,7 @@ function doGet(e) {
   const page = e.parameter.page;
   const fileName = getFileName(page);
   const template = HtmlService.createTemplateFromFile(fileName);
-  template.url = ScriptApp.getService().getUrl();
+  template.page = page;
 
   const htmlOutput = template.evaluate();
   htmlOutput.setTitle('ASP BLOG');
@@ -21,11 +21,17 @@ function getFileName(page){
   ];
 
   if(page === undefined){
-    return 'index';
+    return 'articleList';
   }
 
   if(presetPageList.includes(page)){
     return page;
   }
   return 'notFound';
+}
+
+// let one html load another
+function include(fileName) {
+  const template = HtmlService.createTemplateFromFile(fileName);
+  return template.evaluate().getContent();
 }

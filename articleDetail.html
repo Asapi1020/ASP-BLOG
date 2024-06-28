@@ -5,9 +5,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   </head>
-  <body class="container">
-    HELLO
-    <a href="<?= url ?>" class="btn btn-success">Link to article list</a>
+  <?!= HtmlService.createHtmlOutputFromFile('style').getContent(); ?>
+  <body class="container overflow-scroll">
+    <?!= include('navBar') ?>
+    <?!= include(page) ?>
   </body>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </html>

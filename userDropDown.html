@@ -1,0 +1,16 @@
+<div>
+  <button
+    class='btn btn-outline-light dropdown-toggle text-dark'
+    type='button'
+    id='menu'
+    data-bs-toggle='dropdown'
+    aria-expanded='false'>
+      login
+    <i class='bi-person-fill ms-1'></i>
+  </button>
+  <ul class='dropdown-menu dropdown-menu-end' aria-labelledby='menu'>
+    <li>
+      <a href="<?!= ScriptApp.getService().getUrl() ?>?page=logout" class='dropdown-item'>Logout</a>
+    </li>
+  </ul>
+</div>

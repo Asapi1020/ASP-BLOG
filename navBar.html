@@ -5,21 +5,18 @@
         <a href="<?!= ScriptApp.getService().getUrl() ?>" id="topPageAnchor" class="text-dark">もちょもちょドキュメンツ</a>
       </h1>
       <div class="dropdown">
-
+        <?
+          const userEmail = Session.getActiveUser().getEmail();
+          if(userEmail){
+            const dropdown = include('userDropDown');
+            output.append(dropdown);
+          }
+          else{
+            const googleLoginButton = HtmlService.createHtmlOutputFromFile('googleStyle').getContent();
+            output.append(googleLoginButton);
+          }
+        ?>
       </div>
     </div>
   </nav>
 </div>
-<!--
-  
-  <button
-    class="btn btn-outline-light dropdown-toggle text-dark"
-    type="button"
-    id="menu"
-    data-bs-toggle="dropdown"
-    aria-expanded="false">
-    user.login
-    <i class="bi-person-fill ms-1"></i>
-  </button>
-
--->

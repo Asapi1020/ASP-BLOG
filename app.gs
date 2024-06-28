@@ -1,8 +1,9 @@
 function doGet(e) {
+  const template = HtmlService.createTemplateFromFile('index');
+  
   const page = e.parameter.page;
   const fileName = getFileName(page);
-  const template = HtmlService.createTemplateFromFile(fileName);
-  template.page = page;
+  template.page = fileName;
 
   const htmlOutput = template.evaluate();
   htmlOutput.setTitle('ASP BLOG');

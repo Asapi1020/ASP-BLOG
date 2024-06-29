@@ -63,7 +63,7 @@ function loadArticleList(){
         <div class='card-body'>
           <div class='d-flex justify-content-between'>
             <h5 class='card-title'>${article.title}</h5>
-            <small class='card-text float-end'>${article.createdAt}</small>
+            <small class='card-text float-end'>${ formatTimeByMin(article.createdAt) }</small>
           </div>
           <p class='card-text lead'>${ article.content.slice(0,140) }</p>
         </div>

@@ -22,6 +22,18 @@ function generateUUID() {
   return uuid;
 }
 
+// 2023-06-18T15:45:00 -> 2023/06/18 15:45
+function formatTimeByMin(date){
+  const formattedTime = date.toLocaleTimeString('ja-JP', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  return formattedTime;
+}
+
 function testGeneratingUUID(){
   Logger.log(generateUUID());
 }

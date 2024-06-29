@@ -104,7 +104,7 @@ function loadComments(param){
       <div>
         <div class='mb-1'>
           <i class='bi-person-fill-check me-1 avatar'></i>
-          <small class='commentUser'>${user.name}</small>
+          <small class='commentUser'>${user.name || 'Unnamed User'}</small>
         </div>
         <p>${comment.content}</p>
       </div>`;

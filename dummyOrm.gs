@@ -52,6 +52,48 @@ function createDatum(sheetName, datum){
   Logger.log(`Create new data ${JSON.stringify(dataList)}`);
 }
 
+function updateDatum(sheetName, datum, key){
+  const sheet = openSpreadSheet().getSheetByName(sheetName);
+  const dataRange = sheet.getDataRange();
+  const colLength = dataRange.getNumColumns();
+
+  const keys = sheet.getRange(1, 1, 1, colLength).getValues()[0];
+  const keyIndex = keys.indexOf(key);
+
+  if(keyIndex === -1){
+    Logger.log(`Failed to find key: ${key}`);
+    return;
+  }
+
+  // Key is Found
+  const rowLength = dataRange.getNumRows();
+  const keyProperties = sheet.getRange(1, keyIndex+1, rowLength, 1).getValues(); // [ [id], [1], [2] ]
+  Logger.log(keyProperties);
+  Logger.log(datum[key]);
+
+  let i = 0;
+  for(i=1; i<keyProperties.length; i++){
+    if(keyProperties[i].length > 0 && keyProperties[i][0] === datum[key]){
+      break;
+    }
+  }
+
+  if(i === keyProperties.length){
+    createDatum(sheetName, datum);
+    Logger.log(`Failed to find existing data. Created new one`);
+    return;
+  }
+
+  // Data to update is found
+  const colToInsert = dataRange.getColumn();
+  const rowToInsert = i+1;
+
+  const dataList = objectToList(datum, keys);
+
+  sheet.getRange(rowToInsert, colToInsert, 1, colLength).setValues([dataList]);
+  Logger.log(`Update existing data ${JSON.stringify(dataList)}`);
+}
+
 function objectMatchesCondition(object, condition){
   const keys = Object.keys(condition);
   if(keys == null){

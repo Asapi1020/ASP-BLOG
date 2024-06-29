@@ -36,7 +36,7 @@ function makeCommentFromForm(form){
 
   if(!user.id){
     user.id = generateUUID();
-    // TODO update user data
+    updateDatum('user', user, 'id');
   }
 
   const datum = {

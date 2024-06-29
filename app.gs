@@ -2,12 +2,12 @@ function doGet(e) {
   const userEmail = Session.getActiveUser().getEmail();
   const template = HtmlService.createTemplateFromFile('index');
 
-  const page = e.parameter.page;
-  const fileName = getFileName(page, userEmail);
-  template.page = fileName;
+  const param = e.parameter;
+  param.page = getFileName(param.page, userEmail);
+  template.param = param;
 
   const htmlOutput = template.evaluate();
-  htmlOutput.setTitle('ASP BLOG');
+  htmlOutput.setTitle('もちょもちょドキュメンツ');
   htmlOutput.setFaviconUrl('https://i.imgur.com/J56lAbf.png');
   return htmlOutput;
 }
@@ -36,7 +36,10 @@ function getFileName(page, userEmail){
     'editArticle'
   ];
 
-  if(userEmail && privatePageList.includes(page)){
+  if(privatePageList.includes(page)){
+    if(userEmail){
+      return page;
+    }
     return 'login';
   }
 
@@ -44,7 +47,8 @@ function getFileName(page, userEmail){
 }
 
 // let one html load another
-function include(fileName) {
+function include(fileName, param={}) {
   const template = HtmlService.createTemplateFromFile(fileName);
+  template.param = param;
   return template.evaluate().getContent();
 }

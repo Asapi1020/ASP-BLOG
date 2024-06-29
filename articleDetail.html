@@ -12,13 +12,19 @@
 
   <div>
     <h3>コメント</h3>
-    <?!= loadComments(param) ?>
+    <?!= loadCommentForm(param) ?>
+    <div id="commentContainer">
+      <?!= loadComments(param.id) ?>
+    </div>
   </div>
 
   <script>
     function afterSubmission(response){
-      console.log(response);
-      location.reload();
+      const container = document.getElementById('commentContainer');
+      container.innerHTML = response;
+
+      const commentInput = document.getElementById('commentContent');
+      commentInput.value = '';
     }
   </script>
 </div>

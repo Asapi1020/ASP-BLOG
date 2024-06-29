@@ -9,7 +9,7 @@ function processForm(form) {
     case 'postComment':
       const comment = makeCommentFromForm(form);
       createDatum('comment', comment);
-      break;
+      return loadComments(comment.articleId);
   }
 
   return 'Form submitted successfully!';
@@ -29,15 +29,7 @@ function makeArticleFromForm(form){
 }
 
 function makeCommentFromForm(form){
-  const userRow = findData('user', {email: form.email});
-  const user = (userRow.length > 0)
-    ? userRow[0]
-    : {email: form.email};
-
-  if(!user.id){
-    user.id = generateUUID();
-    updateDatum('user', user, 'id');
-  }
+  const user = ensureUserData(form.email);
 
   const datum = {
     id: generateUUID(),

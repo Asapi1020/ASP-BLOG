@@ -34,6 +34,20 @@ function formatTimeByMin(date){
   return formattedTime;
 }
 
+function ensureUserData(email){
+  const userRow = findData('user', {email});
+  const user = (userRow.length > 0)
+    ? userRow[0]
+    : {email};
+
+  if(!user.id){
+    user.id = generateUUID();
+    updateDatum('user', user, 'id');
+  }
+
+  return user;
+}
+
 function testGeneratingUUID(){
   Logger.log(generateUUID());
 }

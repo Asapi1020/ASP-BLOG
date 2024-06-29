@@ -83,11 +83,11 @@ function loadAnArticle(id){
   return htmlOutput;
 }
 
-function loadComments(param){
+function loadCommentForm(param){
   let htmlOutput = (param.email)
     ? `
       <form id='postComment' onsubmit="handleFormSubmit(event, 'postComment', afterSubmission)">
-        <input class='form-control mb-3' type="text" name='content'/>
+        <input id='commentContent' class='form-control mb-3' type="text" name='content'/>
         <input name="email" type="hidden" value=${param.email}>
         <input name="articleId" type="hidden" value=${param.id}>
         <input name="action" type="hidden" value='postComment'>
@@ -96,7 +96,12 @@ function loadComments(param){
       `
     : `<a href='${param.url}?page=login' class="btn btn-sm btn-warning mb-3">コメントを投稿するためにはログインが必要です。</a>`;
 
-  const comments = findData('comment', {'articleId': param.id});
+  return htmlOutput;
+}
+
+function loadComments(articleId){  
+  const comments = findData('comment', {articleId});
+  let htmlOutput = '';
 
   for(let comment of comments){
     const user = findData('user', {id: comment.userId})[0];

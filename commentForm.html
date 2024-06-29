@@ -1,0 +1,7 @@
+<form id='postComment' onsubmit="handleFormSubmit(event, 'postComment', afterSubmission)">
+  <input class='form-control mb-3' type="text" name='comment'/>
+  <input name="email" type="hidden" value=${param.email}>
+  <input name="articleId" type="hidden" value=${param.id}>
+  <input name="action" type="hidden" value='postComment'>
+  <button type='submit' class='btn btn-outline-secondary mb-3'>コメントを投稿する</button>
+</form>

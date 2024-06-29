@@ -1,17 +1,21 @@
 function processForm(form) {
   switch(form.action){
     case 'newArticle':
-      const datum = makeDatumFromForm(form);
-      createDatum('article', datum);
+      const article = makeArticleFromForm(form);
+      createDatum('article', article);
       break;
     case 'editArticle':
+      break;
+    case 'postComment':
+      const comment = makeCommentFromForm(form);
+      createDatum('comment', comment);
       break;
   }
 
   return 'Form submitted successfully!';
 }
 
-function makeDatumFromForm(form){
+function makeArticleFromForm(form){
   const datum = {
     id: generateUUID(),
     title: form.articleName,
@@ -20,6 +24,29 @@ function makeDatumFromForm(form){
     createdAt: new Date(),
     updatedAt: new Date()
   }
+
+  return datum;
+}
+
+function makeCommentFromForm(form){
+  const userRow = findData('user', {email: form.email});
+  const user = (userRow.length > 0)
+    ? userRow[0]
+    : {email: form.email};
+
+  if(!user.id){
+    user.id = generateUUID();
+    // TODO update user data
+  }
+
+  const datum = {
+    id: generateUUID(),
+    userId: user.id,
+    articleId: form.articleId,
+    content: form.content,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  };
 
   return datum;
 }

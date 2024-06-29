@@ -8,8 +8,17 @@
     <?!= loadAnArticle(param.id) ?>  
   </div>
 
+  <hr />
+
   <div>
     <h3>コメント</h3>
     <?!= loadComments(param) ?>
   </div>
+
+  <script>
+    function afterSubmission(response){
+      console.log(response);
+      location.reload();
+    }
+  </script>
 </div>

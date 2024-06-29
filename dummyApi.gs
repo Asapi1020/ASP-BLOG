@@ -1,11 +1,25 @@
 function processForm(form) {
-  return form.action;
   switch(form.action){
     case 'newArticle':
-      return form.action;
+      const datum = makeDatumFromForm(form);
+      createDatum('article', datum);
+      break;
     case 'editArticle':
-      return form.action;
+      break;
   }
 
   return 'Form submitted successfully!';
+}
+
+function makeDatumFromForm(form){
+  const datum = {
+    id: generateUUID(),
+    title: form.articleName,
+    content: form.articleContent,
+    createdBy: 'tmpSample',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
+
+  return datum;
 }

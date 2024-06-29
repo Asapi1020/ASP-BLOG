@@ -2,13 +2,12 @@
   <nav id="headerNav" class="navbar fixed-top">
     <div class="container-fluid">
       <h1 class="navbar-brand mx-auto">
-        <a href="<?!= ScriptApp.getService().getUrl() ?>" id="topPageAnchor" class="text-dark">もちょもちょドキュメンツ</a>
+        <a href="<?= param.url ?>" id="topPageAnchor" class="text-dark">もちょもちょドキュメンツ</a>
       </h1>
       <div class="dropdown">
         <?
-          const userEmail = Session.getActiveUser().getEmail();
-          if(userEmail){
-            const dropdown = include('userDropDown');
+          if(param.email){
+            const dropdown = include('userDropDown', param);
             output.append(dropdown);
           }
           else{

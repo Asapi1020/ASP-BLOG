@@ -4,6 +4,8 @@ function doGet(e) {
 
   const param = e.parameter;
   param.page = getFileName(param.page, userEmail);
+  param.url = ScriptApp.getService().getUrl();
+  param.email = Session.getActiveUser().getEmail();
   template.param = param;
 
   const htmlOutput = template.evaluate();
@@ -69,5 +71,41 @@ function loadArticleList(){
         </div>
       </a>`;
   }
+  return htmlOutput;
+}
+
+function loadAnArticle(id){
+  const article = findData('article', {id})[0];
+  const htmlOutput = `
+    <h1>${article.title}</h1>
+    <p>${article.content}</p>`;
+
+  return htmlOutput;
+}
+
+function loadComments(param){
+  let htmlOutput = (param.email)
+    ? `
+      <form id='postComment' onsubmit="handleFormSubmit(event, 'postComment', afterSubmission)">
+        <input class='form-control mb-3' type="text" name='comment'/>
+        <button type='submit' class='btn btn-outline-secondary mb-3'>コメントを投稿する</button>
+      </form>
+      `
+    : `<a href='${param.url}?page=login' class="btn btn-sm btn-warning mb-3">コメントを投稿するためにはログインが必要です。</a>`;
+
+  const comments = findData('comment', {articleId: param.id});
+
+  for(let comment of comments){
+    const user = findData('user', {id: comment.userId})[0];
+    htmlOutput += `
+      <div>
+        <div class='mb-1'>
+          <i class='bi-person-fill-check me-1 avatar'>
+          <small class='commentUser'>${user.name}</small>
+        </div>
+        <p>${comment.content}</p>
+      </div>`
+  }
+
   return htmlOutput;
 }

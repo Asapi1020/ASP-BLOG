@@ -4,4 +4,28 @@
       (param.bNewArticle === '1') ? '新しいもちょもちょ' : 'ドキュメンツを編集中';
     ?>
   </h1>
+
+  <form id="editArticle" onsubmit="handleFormSubmit(event, 'editArticle', afterSubmission)" class="mb-5">
+    <div>
+      <h5>もちょもちょタイトル</h5>
+      <input class='form-control mb-3' type="text" name="articleName" value=''>
+    </div>
+    <div>
+      <h5>内容</h5>
+      <textarea id="articleContent" class='form-control mb-3' rows={16} name="articleContent" value=''></textarea>
+    </div>
+    <input name="action" type="hidden" value='<?= (param.bNewArticle) ? 'new' : 'edit' ?>Article'>
+    <button type='submit' class='btn btn-pink'>このもちょもちょを投稿する</button>
+    <hr />
+  </form>
+
+  <div id="previewMarkdown"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  
+  <script>
+    function afterSubmission(response){
+      console.log(response);
+    }
+  </script>
 </div>

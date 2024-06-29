@@ -52,3 +52,22 @@ function include(fileName, param={}) {
   template.param = param;
   return template.evaluate().getContent();
 }
+
+function loadArticleList(){
+  const articles = findData('article');
+  let htmlOutput = '';
+
+  for(let article of articles){
+    htmlOutput += `
+      <a href='${ScriptApp.getService().getUrl()}?page=articleDetail&id=${article.id}' class='card my-3 articleCard'>
+        <div class='card-body'>
+          <div class='d-flex justify-content-between'>
+            <h5 class='card-title'>${article.title}</h5>
+            <small class='card-text float-end'>${article.createdAt}</small>
+          </div>
+          <p class='card-text lead'>${ article.content.slice(0,140) }</p>
+        </div>
+      </a>`;
+  }
+  return htmlOutput;
+}

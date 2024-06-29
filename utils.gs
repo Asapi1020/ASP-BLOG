@@ -48,6 +48,21 @@ function ensureUserData(email){
   return user;
 }
 
+function registerAdminUser(email){
+  const user = ensureUserData(email);
+  const adminIds = getAdminIdList();
+  adminIds.push(user.id);
+  PropertiesService.getScriptProperties().setProperty('adminIdList', JSON.stringify(adminIds));
+}
+
+function getAdminIdList(){
+  const adminIdList = PropertiesService.getScriptProperties().getProperty('adminIdList');
+  if(adminIdList){
+    return JSON.parse(adminIdList);
+  }
+  return [];
+}
+
 function testGeneratingUUID(){
   Logger.log(generateUUID());
 }

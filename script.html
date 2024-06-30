@@ -1,5 +1,6 @@
 <script>
-  function handleFormSubmit(event, formId, callBackFunc) {
+  function handleFormSubmit(event, formId, onClickFunc, callBackFunc) {
+    onClickFunc();
     // prevent form submission from reloading page
     event.preventDefault();
 

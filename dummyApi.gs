@@ -3,7 +3,8 @@ function processForm(form) {
     case 'newArticle':
       const article = makeArticleFromForm(form);
       createDatum('article', article);
-      break;
+      const redirectTo = ScriptApp.getService().getUrl() + '?page=articleDetail&id=' + article.id;
+      return redirectTo;
     case 'editArticle':
       break;
     case 'postComment':

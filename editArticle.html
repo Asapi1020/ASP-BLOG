@@ -5,7 +5,7 @@
     ?>
   </h1>
 
-  <form id="editArticle" onsubmit="handleFormSubmit(event, 'editArticle', afterSubmission)" class="mb-5">
+  <form id="editArticle" onsubmit="handleFormSubmit(event, 'editArticle', onPostArticle, afterSubmission)" class="mb-5">
     <div>
       <h5>もちょもちょタイトル</h5>
       <input class='form-control mb-3' type="text" name="articleName" value=''>
@@ -15,7 +15,9 @@
       <textarea id="articleContent" class='form-control mb-3' rows=16 name="articleContent" value=''></textarea>
     </div>
     <input name="action" type="hidden" value='<?= (param.bNewArticle) ? 'new' : 'edit' ?>Article'>
-    <button type='submit' class='btn btn-pink'>このもちょもちょを投稿する</button>
+    <div id='submitDiv'>
+      <button type='submit' class='btn btn-pink'>このもちょもちょを投稿する</button>
+    </div>
     <hr />
   </form>
 
@@ -25,7 +27,17 @@
   
   <script>
     function afterSubmission(response){
-      console.log(response);
+      const postButton = document.getElementById('submitDiv');
+      postButton.innerHTML = `
+        <a class="btn btn-pink" href="${response}">
+          投稿完了！投稿した記事を見る
+          <i class="bi-arrow-right-circle-fill ms-1></i>">
+        </a>`;
+    }
+
+    function onPostArticle(){
+      const postButton = document.getElementById('submitDiv');
+      postButton.innerHTML = '<p class="btn disabled">処理中...</p>';
     }
   </script>
 </div>

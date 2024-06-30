@@ -86,7 +86,7 @@ function loadAnArticle(id){
 function loadCommentForm(param){
   let htmlOutput = (param.email)
     ? `
-      <form id='postComment' onsubmit="handleFormSubmit(event, 'postComment', afterSubmission)">
+      <form id='postComment' onsubmit="handleFormSubmit(event, 'postComment', onPostComment, afterSubmission)">
         <input id='commentContent' class='form-control mb-3' type="text" name='content'/>
         <input name="email" type="hidden" value=${param.email}>
         <input name="articleId" type="hidden" value=${param.id}>

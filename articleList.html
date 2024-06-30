@@ -7,12 +7,7 @@
     <div>
       <button class='btn btn-sm btn-sort btn-outline-dark ms-3' onclick="">古い順</button>
     </div>
-    <div style="margin-left: auto;">
-      <a class='btn btn-pink' href="<?= param.url ?>?page=editArticle&bNewArticle=1">
-        <i class='bi-pencil-square me-1'></i>
-        新規のもちょもちょドキュメントを作成
-      </a>
-    </div>
+    <?!= renderNewArticleButton(param) ?>
   </div>
   <div id="articleList">
     <?!= loadArticleList() ?>

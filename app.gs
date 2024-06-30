@@ -117,3 +117,11 @@ function loadComments(articleId){
 
   return htmlOutput;
 }
+
+function renderNewArticleButton(param){
+  if(!param.email){
+    return '';
+  }
+
+  return include('newArticleButton', param);
+}

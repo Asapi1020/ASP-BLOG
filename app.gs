@@ -58,15 +58,34 @@ function include(fileName, param={}) {
 function loadArticleList(bDescent){
   const articles = findData('article');
   const sortedArticles = sortObjectArray(articles, 'updatedAt', bDescent);
+  
+  const users = findData('user');
+  const findUserName = (id) => {
+    for(let i=0; i<users.length; i++){
+      if(users[i].id === id){
+        return users[i].name;
+      }
+    }
+  };
+
   let htmlOutput = '';
 
   for(let article of sortedArticles){
+    const userName = findUserName(article.createdBy);
+
     htmlOutput += `
       <a href='${ScriptApp.getService().getUrl()}?page=articleDetail&id=${article.id}' class='card my-3 articleCard'>
         <div class='card-body'>
           <div class='d-flex justify-content-between'>
             <h5 class='card-title'>${article.title}</h5>
-            <small class='card-text float-end'>${ formatTimeByMin(article.createdAt) }</small>
+            <div>
+              <div>
+                <small class='card-text float-end'>${ formatTimeByMin(article.createdAt) }</small>
+              </div>
+              <div>
+                <small class='card-text float-end'>${ userName }</small>
+              </div>
+            </div>
           </div>
           <p class='card-text lead'>${ article.content.slice(0,140) }</p>
         </div>
@@ -84,6 +103,7 @@ function reloadArticleList(bDescent){
 
 function loadAnArticle(param){
   const article = findData('article', {id: param.id})[0];
+  const author = findData('user', {id: article.createdBy})[0];
 
   let htmlOutput = `
     <div class="d-flex">
@@ -103,7 +123,10 @@ function loadAnArticle(param){
   
   htmlOutput += `
     <div>
-      <h1>${article.title}</h1>
+      <div class="d-flex justify-content-between">
+        <h1>${article.title}</h1>
+        <p class="float-end">投稿者：${author.name || 'Unnamed User'}</p>
+      </div>
       <p>${article.content}</p>
     </div>`;
 

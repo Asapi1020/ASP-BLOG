@@ -5,7 +5,7 @@ function doGet(e) {
   const param = e.parameter;
   param.page = getFileName(param.page, userEmail);
   param.url = ScriptApp.getService().getUrl();
-  param.email = Session.getActiveUser().getEmail();
+  param.userId = ensureUserData(userEmail).id;
   template.param = param;
 
   const htmlOutput = template.evaluate();
@@ -92,11 +92,11 @@ function loadAnArticle(id){
 }
 
 function loadCommentForm(param){
-  let htmlOutput = (param.email)
+  let htmlOutput = (param.userId)
     ? `
       <form id='postComment' onsubmit="handleFormSubmit(event, 'postComment', onPostComment, afterSubmission)">
         <input id='commentContent' class='form-control mb-3' type="text" name='content'/>
-        <input name="email" type="hidden" value=${param.email}>
+        <input name="userId" type="hidden" value=${param.userId}>
         <input name="articleId" type="hidden" value=${param.id}>
         <input name="action" type="hidden" value='postComment'>
         <div id="postButtonDiv">
@@ -130,7 +130,7 @@ function loadComments(articleId){
 }
 
 function renderNewArticleButton(param){
-  if(!param.email){
+  if(!param.userId){
     return '';
   }
 

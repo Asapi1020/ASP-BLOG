@@ -48,10 +48,9 @@ function ensureUserData(email){
   return user;
 }
 
-function registerAdminUser(email){
-  const user = ensureUserData(email);
+function registerAdminUser(userId){
   const adminIds = getAdminIdList();
-  adminIds.push(user.id);
+  adminIds.push(userId);
   PropertiesService.getScriptProperties().setProperty('adminIdList', JSON.stringify(adminIds));
 }
 

@@ -30,7 +30,7 @@ function makeArticleFromForm(form){
 }
 
 function makeCommentFromForm(form){
-  const user = ensureUserData(form.email);
+  const user = findData('user', {id: form.userId})[0];
 
   const datum = {
     id: generateUUID(),

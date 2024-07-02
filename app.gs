@@ -91,7 +91,9 @@ function loadCommentForm(param){
         <input name="email" type="hidden" value=${param.email}>
         <input name="articleId" type="hidden" value=${param.id}>
         <input name="action" type="hidden" value='postComment'>
-        <button type='submit' class='btn btn-outline-secondary mb-3'>コメントを投稿する</button>
+        <div id="postButtonDiv">
+          <button type='submit' class='btn btn-outline-secondary mb-3'>コメントを投稿する</button>
+        </div>
       </form>
       `
     : `<a href='${param.url}?page=login' class="btn btn-sm btn-warning mb-3">コメントを投稿するためにはログインが必要です。</a>`;

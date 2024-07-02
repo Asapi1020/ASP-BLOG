@@ -25,10 +25,14 @@
 
       const commentInput = document.getElementById('commentContent');
       commentInput.value = '';
+
+      const postButtonDiv = document.getElementById('postButtonDiv');
+      postButtonDiv.innerHTML = `<button type='submit' class='btn btn-outline-secondary mb-3'>コメントを投稿する</button>`;
     }
 
     function onPostComment(){
-      
+      const postButtonDiv = document.getElementById('postButtonDiv');
+      postButtonDiv.innerHTML = `<p class="btn disabled">処理中...</p>`;
     }
   </script>
 </div>

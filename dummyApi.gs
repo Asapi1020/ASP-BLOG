@@ -48,3 +48,9 @@ function makeCommentFromForm(form){
 
   return datum;
 }
+
+function deleteArticle(paramStr){
+  const param = JSON.parse(paramStr);
+  deleteDatum('article', {id: param.id});
+  return include('deletedArticle', param);
+}

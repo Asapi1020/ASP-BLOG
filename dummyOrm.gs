@@ -109,6 +109,51 @@ function objectMatchesCondition(object, condition){
   return true;
 }
 
+function deleteDatum(sheetName, where){
+  // get target data list
+  let sheet = openSpreadSheet().getSheetByName(sheetName);
+  if(!sheet){
+    Logger.log(`Sheet is not defined for: ${sheetName}`);
+    return;
+  }
+
+  const dataListList = sheet.getDataRange().getValues();
+
+  if(!dataListList){
+    Logger.log('Fatal Error: No values found!');
+    return;
+  }
+
+  // split keys and data
+  const keys = dataListList[0]; // [id, title, content, ...]
+  dataListList.splice(0, 1);    // [ [1, 'hello', 'yeah hello days', ...], [], [], [], ... [] ]
+
+  // convert
+  for(let i=0; i<dataListList.length; i++){
+    const dataList = dataListList[i];
+    const dataObject = {};
+
+    for(let j=0; j<keys.length; j++){
+      const key = keys[j];
+      const datum = dataList[j];
+      dataObject[key] = datum;
+    }
+
+    if(!objectMatchesCondition(dataObject, where)){
+      continue;
+    }else{
+      try{
+        sheet.deleteRow(i+2);
+        Logger.log(`Deleted column: ${i+2}`);
+      }catch(err){
+        Logger.log(`Failed to delete: ${i+2}: ${err.message}`);
+      }      
+      return;
+    }
+  }
+  Logger.log('Not found match');
+}
+
 /**
  * @param {Object} object - {id: 1020, name: 'moe'}
  * @param {[]} keys - [name, id]

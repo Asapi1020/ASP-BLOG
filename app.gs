@@ -148,6 +148,28 @@ function loadComments(articleId){
   return htmlOutput;
 }
 
+function renderFormContent(param){
+  let defaultTitle = '';
+  let defaultContent = '';
+
+  if(param.bNewArticle === '0'){
+    const article = findData('article', {id: param.id})[0];
+    defaultTitle = article.title;
+    defaultContent = article.content;
+  }  
+
+  const htmlOutput = `
+    <div>
+      <h5>もちょもちょタイトル</h5>
+      <input class='form-control mb-3' type="text" name="articleName" value="${defaultTitle}">
+    </div>
+    <div>
+      <h5>内容</h5>
+      <textarea id="articleContent" class='form-control mb-3' rows=16 name="articleContent">${defaultContent}</textarea>
+    </div>`;
+  return htmlOutput;
+}
+
 function renderNewArticleButton(param){
   if(!param.userId){
     return '';

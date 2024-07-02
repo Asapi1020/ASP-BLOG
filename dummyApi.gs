@@ -15,9 +15,25 @@ function processForm(form) {
       const comment = makeCommentFromForm(form);
       createDatum('comment', comment);
       return loadComments(comment.articleId);
+    case 'editUserName':
+      updateUserName(form.userId, form.name);
+      return loadMyPage(form.userId);
   }
 
-  return 'Form submitted successfully!';
+  return '500 Error! Something wrong';
+}
+
+function updateUserName(id, name){
+  const users = findData('user', {id});
+  if(users.length === 0){
+    Logger.log(`Failed to find user`);
+    return;
+  }
+
+  const user = users[0];
+  user.name = name;
+
+  updateDatum('user', user, 'id');
 }
 
 function makeArticleFromForm(form){

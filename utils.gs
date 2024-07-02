@@ -63,6 +63,17 @@ function getAdminIdList(){
   return [];
 }
 
+function sortObjectArray(array, property, bDescent){
+  return array.sort((a, b) => {
+    const diff = a[property] - b[property];
+    
+    if(bDescent){
+      return diff*(-1);
+    }
+    return diff;
+  })
+}
+
 function testGeneratingUUID(){
   Logger.log(generateUUID());
 }

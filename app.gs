@@ -57,9 +57,10 @@ function include(fileName, param={}) {
 
 function loadArticleList(){
   const articles = findData('article');
+  const sortedArticles = sortObjectArray(articles, 'updatedAt', true);
   let htmlOutput = '';
 
-  for(let article of articles){
+  for(let article of sortedArticles){
     htmlOutput += `
       <a href='${ScriptApp.getService().getUrl()}?page=articleDetail&id=${article.id}' class='card my-3 articleCard'>
         <div class='card-body'>

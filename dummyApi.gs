@@ -21,7 +21,7 @@ function makeArticleFromForm(form){
     id: generateUUID(),
     title: form.articleName,
     content: form.articleContent,
-    createdBy: 'tmpSample',
+    createdBy: form.author,
     createdAt: new Date(),
     updatedAt: new Date()
   }

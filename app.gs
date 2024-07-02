@@ -82,11 +82,30 @@ function reloadArticleList(bDescent){
   };
 }
 
-function loadAnArticle(id){
-  const article = findData('article', {id})[0];
-  const htmlOutput = `
-    <h1>${article.title}</h1>
-    <p>${article.content}</p>`;
+function loadAnArticle(param){
+  const article = findData('article', {id: param.id})[0];
+
+  let htmlOutput = `
+    <div class="d-flex">
+      <div>
+        <a href="${param.url}" class='btn btn-outline-secondary mb-5'>
+          <i class='bi-arrow-left-circle-fill me-1'></i>
+          一覧へ戻る
+        </a>
+      </div>`;
+
+  if( (article.createdBy) === param.userId ){
+    htmlOutput += include('articleConfig', param);
+  }
+
+  htmlOutput += `
+    </div>`;
+  
+  htmlOutput += `
+    <div>
+      <h1>${article.title}</h1>
+      <p>${article.content}</p>
+    </div>`;
 
   return htmlOutput;
 }

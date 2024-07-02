@@ -14,6 +14,7 @@
       <h5>内容</h5>
       <textarea id="articleContent" class='form-control mb-3' rows=16 name="articleContent" value=''></textarea>
     </div>
+    <input name="author" type="hidden" value='<?= param.userId ?>'>
     <input name="action" type="hidden" value='<?= (param.bNewArticle) ? 'new' : 'edit' ?>Article'>
     <div id='submitDiv'>
       <button type='submit' class='btn btn-pink'>このもちょもちょを投稿する</button>

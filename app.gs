@@ -166,7 +166,8 @@ function renderFormContent(param){
     <div>
       <h5>内容</h5>
       <textarea id="articleContent" class='form-control mb-3' rows=16 name="articleContent">${defaultContent}</textarea>
-    </div>`;
+    </div>
+    <input name="id" type="hidden" value="${param.id}">`;
   return htmlOutput;
 }
 

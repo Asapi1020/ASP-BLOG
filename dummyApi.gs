@@ -1,12 +1,16 @@
 function processForm(form) {
   switch(form.action){
     case 'newArticle':
-      const article = makeArticleFromForm(form);
-      createDatum('article', article);
-      const redirectTo = ScriptApp.getService().getUrl() + '?page=articleDetail&id=' + article.id;
-      return redirectTo;
+      form.id = generateUUID();
+      const newArticle = makeArticleFromForm(form);
+      createDatum('article', newArticle);
+      const redirectToNew = ScriptApp.getService().getUrl() + '?page=articleDetail&id=' + newArticle.id;
+      return redirectToNew;
     case 'editArticle':
-      break;
+      const editedArticle = makeArticleFromForm(form);
+      updateDatum('article', editedArticle, 'id');
+      const redirectToEdited = ScriptApp.getService().getUrl() + '?page=articleDetail&id=' + editedArticle.id;
+      return redirectToEdited;
     case 'postComment':
       const comment = makeCommentFromForm(form);
       createDatum('comment', comment);
@@ -17,8 +21,9 @@ function processForm(form) {
 }
 
 function makeArticleFromForm(form){
+  Logger.log(form.id);
   const datum = {
-    id: generateUUID(),
+    id: form.id,
     title: form.articleName,
     content: form.articleContent,
     createdBy: form.author,

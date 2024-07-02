@@ -75,6 +75,13 @@ function loadArticleList(bDescent){
   return htmlOutput;
 }
 
+function reloadArticleList(bDescent){
+  return {
+    htmlOutput: loadArticleList(bDescent),
+    bDescent
+  };
+}
+
 function loadAnArticle(id){
   const article = findData('article', {id})[0];
   const htmlOutput = `

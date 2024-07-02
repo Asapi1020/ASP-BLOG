@@ -55,9 +55,9 @@ function include(fileName, param={}) {
   return template.evaluate().getContent();
 }
 
-function loadArticleList(){
+function loadArticleList(bDescent){
   const articles = findData('article');
-  const sortedArticles = sortObjectArray(articles, 'updatedAt', true);
+  const sortedArticles = sortObjectArray(articles, 'updatedAt', bDescent);
   let htmlOutput = '';
 
   for(let article of sortedArticles){
@@ -104,9 +104,10 @@ function loadCommentForm(param){
 
 function loadComments(articleId){  
   const comments = findData('comment', {articleId});
+  const sortedComments = sortObjectArray(comments, 'updatedAt', true);
   let htmlOutput = '';
 
-  for(let comment of comments){
+  for(let comment of sortedComments){
     const user = findData('user', {id: comment.userId})[0];
     htmlOutput += `
       <div>

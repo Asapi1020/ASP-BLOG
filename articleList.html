@@ -2,14 +2,38 @@
   <h1>!! mocho mocho docs !!</h1>
   <div class="d-flex">
     <div>
-      <button class='btn btn-sm btn-sort btn-dark' onclick="" disabled>新しい順</button>
+      <button class='btn btn-sm btn-sort btn-dark' onclick="reverseArticles(true)" disabled>新しい順</button>
     </div>
     <div>
-      <button class='btn btn-sm btn-sort btn-outline-dark ms-3' onclick="">古い順</button>
+      <button class='btn btn-sm btn-sort btn-outline-dark ms-3' onclick="reverseArticles(false)">古い順</button>
     </div>
     <?!= renderNewArticleButton(param) ?>
   </div>
   <div id="articleList">
-    <?!= loadArticleList() ?>
+    <?!= loadArticleList(true) ?>
   </div>
+
+  <script>
+    // call loadArticleList() again
+    function reverseArticles(bDescent){
+      google.script.run.withSuccessHandler(receiveReversed).loadArticleList(bDescent);
+    }
+
+    // callback and switch button states
+    function receiveReversed(res){
+      const articleList = document.getElementById('articleList');
+      articleList.innerHTML = res;
+
+      const sortButtons = document.querySelectorAll('button.btn-sort');
+      sortButtons.forEach(button => {
+        button.disabled = !(button.disabled);
+
+        const classToRemove = (button.disabled) ? 'btn-outline-dark' : 'btn-dark';
+        const classToAdd = (button.disabled) ? 'btn-dark': 'btn-outline-dark';
+
+        button.classList.remove(classToRemove);
+        button.classList.add(classToAdd);
+      });
+    }
+  </script>
 </div>

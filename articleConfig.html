@@ -1,0 +1,31 @@
+<div style="margin-left: auto;">
+  <a class='btn btn-outline-secondary me-3' href="<?= param.url ?>?page=editArticle&bNewArticle=0&id=<?= param.id ?>">
+    <i class='bi-pen'></i>
+  </a>
+  <button id="deleteButton" class='btn btn-outline-danger me-3' onclick="deleteArticle(<?= JSON.stringify(param) ?>)">
+    <i class='bi-trash'></i>
+  </button>  
+</div>
+<script>
+  function deleteArticle(paramStr){
+    const deleteButton = document.getElementById('deleteButton');
+    deleteButton.disabled = true;
+
+    if (confirm('この記事を削除しちゃうの？')) {
+      try {
+        google.script.run.withSuccessHandler(afterDeletion).deleteArticle(paramStr);
+      }catch(err){
+        console.error('Error:', err);
+        alert('エラーが発生しました。');
+      }
+    }
+    else{
+      deleteButton.disabled = false;
+    }
+  }
+
+  function afterDeletion(res){
+    const articleDetailDiv = document.getElementById('articleDetail');
+    articleDetailDiv.innerHTML = res;
+  }
+</script>

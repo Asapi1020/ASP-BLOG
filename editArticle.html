@@ -1,0 +1,37 @@
+<div>
+  <h1 id="editorTitle">
+    <?=
+      (param.bNewArticle === '1') ? '新しいもちょもちょ' : 'ドキュメンツを編集中';
+    ?>
+  </h1>
+
+  <form id="editArticle" onsubmit="handleFormSubmit(event, 'editArticle', onPostArticle, afterSubmission)" class="mb-5">
+    <?!= renderFormContent(param) ?>
+    <input name="author" type="hidden" value='<?= param.userId ?>'>
+    <input name="action" type="hidden" value='<?= (param.bNewArticle === '1') ? 'new' : 'edit' ?>Article'>
+    <div id='submitDiv'>
+      <button type='submit' class='btn btn-pink'>このもちょもちょを投稿する</button>
+    </div>
+    <hr />
+  </form>
+
+  <div id="previewMarkdown"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  
+  <script>
+    function afterSubmission(response){
+      const postButton = document.getElementById('submitDiv');
+      postButton.innerHTML = `
+        <a class="btn btn-pink" href="${response}">
+          投稿完了！投稿した記事を見る
+          <i class="bi-arrow-right-circle-fill ms-1></i>">
+        </a>`;
+    }
+
+    function onPostArticle(){
+      const postButton = document.getElementById('submitDiv');
+      postButton.innerHTML = '<p class="btn disabled">処理中...</p>';
+    }
+  </script>
+</div>

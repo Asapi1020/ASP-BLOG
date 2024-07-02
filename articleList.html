@@ -1,0 +1,57 @@
+<div>
+  <h1>!! mocho mocho docs !!</h1>
+  <div class="d-flex">
+    <div>
+      <button id="btn-sort-descent" class='btn btn-sm btn-dark' onclick="reverseArticles(true)" disabled>新しい順</button>
+    </div>
+    <div>
+      <button id="btn-sort-ascent" class='btn btn-sm btn-outline-dark ms-3' onclick="reverseArticles(false)">古い順</button>
+    </div>
+    <div id="spinnerDiv"></div>
+    <?!= renderNewArticleButton(param) ?>
+  </div>
+  <div id="articleList">
+    <?!= loadArticleList(true) ?>
+  </div>
+
+  <script>
+    // call loadArticleList() again
+    function reverseArticles(bDescent){
+      toggleSpinner(true);
+      toggleDisability(bDescent);
+      google.script.run.withSuccessHandler(receiveReversed).reloadArticleList(bDescent);
+    }
+
+    // callback and switch button states
+    function receiveReversed(res){
+      const articleList = document.getElementById('articleList');
+      articleList.innerHTML = res.htmlOutput;
+
+      toggleDisability(!res.bDescent);
+      toggleSpinner(false);
+    }
+
+    function toggleDisability(bDescent){
+      const btnClassToToggle = (bDescent) ? 'btn-sort-descent' : 'btn-sort-ascent';
+      const button = document.getElementById(btnClassToToggle);
+
+      button.disabled = !(button.disabled);
+      const classToRemove = (button.disabled) ? 'btn-outline-dark' : 'btn-dark';
+      const classToAdd = (button.disabled) ? 'btn-dark': 'btn-outline-dark';
+
+      button.classList.remove(classToRemove);
+      button.classList.add(classToAdd);
+    }
+
+    function toggleSpinner(bShow){
+      const spinnerDiv = document.getElementById('spinnerDiv');
+      spinnerDiv.innerHTML = (bShow)
+        ? `
+          <div class="spinner-border ms-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          `
+        : '';
+    }
+  </script>
+</div>

@@ -1,0 +1,10 @@
+<script>
+  function handleFormSubmit(event, formId, onClickFunc, callBackFunc) {
+    onClickFunc();
+    // prevent form submission from reloading page
+    event.preventDefault();
+
+    const form = document.getElementById(formId);
+    google.script.run.withSuccessHandler(callBackFunc).processForm(form);
+  }
+</script>

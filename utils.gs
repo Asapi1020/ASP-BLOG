@@ -42,6 +42,7 @@ function ensureUserData(email){
 
   if(!user.id){
     user.id = generateUUID();
+    user.createdAt = new Date();
     updateDatum('user', user, 'id');
   }
 

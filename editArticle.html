@@ -20,6 +20,23 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   
   <script>
+    // preview markdown
+    document.addEventListener('DOMContentLoaded', () => {
+      const contentTextArea = document.getElementById('articleContent');
+      const previewDiv = document.getElementById('previewMarkdown');
+      renderPreview(contentTextArea, previewDiv);
+
+      contentTextArea.addEventListener('input', () => {
+        renderPreview(contentTextArea, previewDiv);
+      });  
+    });
+
+    function renderPreview(readTextArea, previewDiv){
+      const markdownContent = marked.parse(readTextArea.value);
+      previewDiv.innerHTML = markdownContent;
+    }
+
+    // post article
     function afterSubmission(response){
       const postButton = document.getElementById('submitDiv');
       postButton.innerHTML = `

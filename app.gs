@@ -5,7 +5,7 @@ function doGet(e) {
   const param = e.parameter;
   param.page = getFileName(param.page, userEmail);
   param.url = ScriptApp.getService().getUrl();
-  param.userId = ensureUserData(userEmail).id;
+  param.userId = (userEmail) ? ensureUserData(userEmail).id : '';
   template.param = param;
 
   const htmlOutput = template.evaluate();
@@ -35,7 +35,8 @@ function getFileName(page, userEmail){
   }
 
   const privatePageList = [
-    'editArticle'
+    'editArticle',
+    'mypage'
   ];
 
   if(privatePageList.includes(page)){
@@ -103,7 +104,11 @@ function reloadArticleList(bDescent){
 
 function loadAnArticle(param){
   const article = findData('article', {id: param.id})[0];
-  const author = findData('user', {id: article.createdBy})[0];
+  const authors = findData('user', {id: article.createdBy});
+  let authorName = 'undefined';
+  if(authors.length > 0){
+    authorName = authors[0].name;
+  }
 
   let htmlOutput = `
     <div class="d-flex">
@@ -125,9 +130,9 @@ function loadAnArticle(param){
     <div>
       <div class="d-flex justify-content-between">
         <h1>${article.title}</h1>
-        <p class="float-end">投稿者：${author.name || 'Unnamed User'}</p>
+        <p class="float-end">投稿者：${authorName || 'Unnamed User'}</p>
       </div>
-      <p>${article.content}</p>
+      <div id="articleContent">${article.content}</div>
     </div>`;
 
   return htmlOutput;
@@ -154,19 +159,51 @@ function loadCommentForm(param){
 function loadComments(articleId){  
   const comments = findData('comment', {articleId});
   const sortedComments = sortObjectArray(comments, 'updatedAt', true);
+
+  const users = findData('user');
+  const findUserName = (id) => {
+    for(let user of users){
+      if(user.id === id){
+        return user.name;
+      }
+    }
+  };
+
   let htmlOutput = '';
 
   for(let comment of sortedComments){
-    const user = findData('user', {id: comment.userId})[0];
+    const userName = findUserName(comment.userId) || 'Unnamed User';
     htmlOutput += `
       <div>
         <div class='mb-1'>
           <i class='bi-person-fill-check me-1 avatar'></i>
-          <small class='commentUser'>${user.name || 'Unnamed User'}</small>
+          <small class='commentUser'>${userName}</small>
         </div>
         <p>${comment.content}</p>
       </div>`;
   }
+
+  return htmlOutput;
+}
+
+function loadMyPage(userId){
+  const users = findData('user', {id: userId});
+
+  if(users.length === 0){
+    Logger.log(`Failed to load user: ${userId}`);
+    return 'Error: 500 Failed to load user info!';
+  }
+
+  const user = users[0];
+  let htmlOutput = `
+    <div id="userNameDiv" class="mb-3 display-4">
+      <b id="userName">${user.name || 'Unnamed User'}</b>
+    </div>
+    <div class="mb-3">
+      <button id="editButton" class='btn btn-sm btn-secondary ms-1' onclick='editUserName("${userId}")'>名前を編集する</button>
+      <small class="ms-1">ID: ${user.id}</small>
+    </div>
+    `;
 
   return htmlOutput;
 }

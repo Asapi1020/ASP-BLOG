@@ -1,0 +1,41 @@
+<div>
+  <h1>まいぺーじ</h1>
+  <div id="userInfo">
+    <?!= loadMyPage(param.id) ?>
+  </div>
+  <hr />
+  <p>ここにはまだこれ以上のコンテンツがありません</p>
+</div>
+<script>
+  function editUserName(userId){
+    const userInfoDiv = document.getElementById('userInfo');
+    const userName = document.getElementById('userName').innerHTML;
+
+    userInfoDiv.innerHTML = `
+      <form id='editUserName' onsubmit="handleFormSubmit(event, 'editUserName', onEditUserName, afterEditUserName)">
+        <input class='form-control mb-3 large-input' type="text" name='name' value='${userName}'/>
+        <input type="hidden" name="userId" value="${userId}" />
+        <input type="hidden" name="action" value="editUserName" />
+        <div class="mb-3">
+          <button id="saveButton" type='submit' class='btn btn-sm btn-outline-success ms-1'>
+            保存する
+            <i class='bi-save ms-1'></i>
+          </button>
+          <small class='ms-1'>ID: ${userId}</small>
+        </div>
+      </form>`;
+  }
+
+  function onEditUserName(){
+    const saveButton = document.getElementById('saveButton');
+    saveButton.disabled = true;
+    saveButton.innerHTML = `
+      <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+      保存中...`;
+  }
+
+  function afterEditUserName(res){
+    const userInfoDiv = document.getElementById('userInfo');
+    userInfoDiv.innerHTML = res;
+  }
+</script>

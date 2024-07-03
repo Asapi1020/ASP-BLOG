@@ -11,7 +11,17 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
   <script>
+    // markdown
+    document.addEventListener('DOMContentLoaded', () => {
+      const contentDiv = document.getElementById('articleContent');
+      const markdownContent = marked.parse(contentDiv.innerHTML);
+      contentDiv.innerHTML = markdownContent;
+    });
+    
+    // post
     function afterSubmission(response){
       const container = document.getElementById('commentContainer');
       container.innerHTML = response;

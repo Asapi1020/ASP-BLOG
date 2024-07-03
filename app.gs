@@ -5,7 +5,7 @@ function doGet(e) {
   const param = e.parameter;
   param.page = getFileName(param.page, userEmail);
   param.url = ScriptApp.getService().getUrl();
-  param.userId = ensureUserData(userEmail).id;
+  param.userId = (userEmail) ? ensureUserData(userEmail).id : '';
   template.param = param;
 
   const htmlOutput = template.evaluate();

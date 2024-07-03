@@ -14,8 +14,11 @@
               </a>`);
           }
           else{
-            const googleLoginButton = HtmlService.createHtmlOutputFromFile('googleStyle').getContent();
-            output.append(googleLoginButton);
+            output.append(`
+              <a class="btn btn-outline-light text-dark" href="${param.url}?page=login">
+                ログイン
+                <i class='bi-person ms-1'></i>
+              </a>`);
           }
         ?>
       </div>

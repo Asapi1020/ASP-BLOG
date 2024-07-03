@@ -132,7 +132,7 @@ function loadAnArticle(param){
         <h1>${article.title}</h1>
         <p class="float-end">投稿者：${authorName || 'Unnamed User'}</p>
       </div>
-      <p>${article.content}</p>
+      <div id="articleContent">${article.content}</div>
     </div>`;
 
   return htmlOutput;

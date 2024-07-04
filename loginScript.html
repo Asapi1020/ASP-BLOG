@@ -26,15 +26,45 @@
       return;
     }
 
+    // prevent from doubli clicking
+    const submitButton = document.getElementById('submitButton');
+    submitButton.disabled = true;
+
+    // main process
     const form = document.getElementById('signIn');
     const dummyForm = document.createElement('form');
     dummyForm.innerHTML = form.innerHTML;
     dummyForm.password.value = await hashString(form.password);
     google.script.run.withSuccessHandler(afterSignIn).processForm(dummyForm);
-
   }
 
   function afterSignIn(res){
+    const resJson = JSON.parse(res);
+    const resMsg = document.getElementById('res-message');
+    const submitButton = document.getElementById('submitButton');
+
+    switch(resJson.status){
+      case '200':
+        resMsg.classList.remove('text-danger');
+        resMsg.innerHTML = (resJson.type === 'signIn') ? 'ログイン成功！' : '登録完了！';
+
+        const toggleButton = document.getElementById('toggleIsNew');
+        toggleButton.disabled = true;
+        return;
+
+      case '400':
+        resMsg.classList.add('text-danger');
+        resMsg.innerHTML = (resJson.type === 'signIn') ? 'このアカウントは存在しないか、入力情報が誤っています。' : 'このアカウントは既に登録されています。';      
+        submitButton.disabled = false;
+        return;
+
+      case '500':
+        resMsg.classList.add('text-danger');
+        resMsg.innerHTML = '申し訳ありません。予期しないエラーが発生しました。' +
+          ( (resJson.type === 'signIn') ? '運営にご連絡いただくか、新規のアカウントを作成してご利用ください。' : '運営にご連絡ください。' );
+        submitButton.disabled = false;
+        return;
+    }
     console.log(res);
   }
 

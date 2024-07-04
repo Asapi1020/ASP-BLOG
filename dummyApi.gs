@@ -19,6 +19,7 @@ function processForm(form) {
       updateUserName(form.userId, form.name);
       return loadMyPage(form.userId);
     case 'signIn':
+      return signIn(form);
     case 'signUp':
       return `Success! ${JSON.stringify(form)}`;
   }
@@ -72,4 +73,27 @@ function deleteArticle(paramStr){
   const param = JSON.parse(paramStr);
   deleteDatum('article', {id: param.id});
   return include('deletedArticle', param);
+}
+
+function signIn(form){
+  const users = findData('user', {
+    name: form.name,
+    password: form.password
+  });
+
+  const res = {type: 'signIn'};
+
+  if(users.length === 1){
+    const user = users[0];
+    PropertiesService.getUserProperties().setProperty('userId', user.id);
+    res.status = '200'; // success
+  }
+  else if(users.length === 0){
+    res.status = '400'; // not registered yet
+  }
+  else{
+    res.status = '500'; // it should not be occured
+  }
+  
+  return JSON.stringify(res);
 }

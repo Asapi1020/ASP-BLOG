@@ -74,6 +74,19 @@ function sortObjectArray(array, property, bDescent){
   })
 }
 
+function sanitizeInput(input) {
+  // replace HTML entity from unique characters
+  const entityMap = {
+    '<': '&lt;',
+    '>': '&gt;',
+    '=': '&#61;',
+  };
+  
+  return input.replace(/[<>=]/g, (match) => {
+    return entityMap[match];
+  });
+}
+
 function testGeneratingUUID(){
   Logger.log(generateUUID());
 }

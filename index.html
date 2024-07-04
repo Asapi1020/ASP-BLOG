@@ -10,7 +10,9 @@
   <?!= HtmlService.createHtmlOutputFromFile('googleStyle').getContent(); ?>
 
   <body class="container overflow-scroll">
-    <?!= include('navBar', param) ?>
+    <div id="navBarDiv">
+      <?!= include('navBar', param) ?>
+    </div>
     <?!= include(param.page, param) ?>
   </body>
   

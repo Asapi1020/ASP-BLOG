@@ -1,11 +1,9 @@
 function doGet(e) {
-  const userId = PropertiesService.getUserProperties().getProperty('userId') || '';
   const template = HtmlService.createTemplateFromFile('index');
 
   const param = e.parameter;
-  param.page = getFileName(param.page, userId);
+  param.page = getFileName(param.page);
   param.url = ScriptApp.getService().getUrl();
-  param.userId = userId;
   template.param = param;
 
   const htmlOutput = template.evaluate();
@@ -18,7 +16,7 @@ function doGet(e) {
  * @param {String} page - page parameter in URL
  * @return {String} - HTML file name to open
  */
-function getFileName(page, userId){
+function getFileName(page){
   // top page
   if(page === undefined){
     return 'articleList';
@@ -38,6 +36,8 @@ function getFileName(page, userId){
     'editArticle',
     'mypage'
   ];
+
+  const userId = getUserId();
 
   if(privatePageList.includes(page)){
     if(userId){
@@ -119,7 +119,7 @@ function loadAnArticle(param){
         </a>
       </div>`;
 
-  if( (article.createdBy) === param.userId ){
+  if( (article.createdBy) === getUserId() ){
     htmlOutput += include('articleConfig', param);
   }
 
@@ -139,11 +139,12 @@ function loadAnArticle(param){
 }
 
 function loadCommentForm(param){
-  let htmlOutput = (param.userId)
+  const userId = getUserId();
+  let htmlOutput = (userId)
     ? `
       <form id='postComment' onsubmit="handleFormSubmit(event, 'postComment', onPostComment, afterSubmission)">
         <input id='commentContent' class='form-control mb-3' type="text" name='content'/>
-        <input name="userId" type="hidden" value=${param.userId}>
+        <input name="userId" type="hidden" value=${userId}>
         <input name="articleId" type="hidden" value=${param.id}>
         <input name="action" type="hidden" value='postComment'>
         <div id="postButtonDiv">
@@ -186,7 +187,8 @@ function loadComments(articleId){
   return htmlOutput;
 }
 
-function loadMyPage(userId){
+function loadMyPage(){
+  const userId = getUserId();
   const users = findData('user', {id: userId});
 
   if(users.length === 0){
@@ -227,12 +229,13 @@ function renderFormContent(param){
       <h5>内容</h5>
       <textarea id="articleContent" class='form-control mb-3' rows=16 name="articleContent">${defaultContent}</textarea>
     </div>
+    <input name="author" type="hidden" value="${getUserId()}">
     <input name="id" type="hidden" value="${param.id}">`;
   return htmlOutput;
 }
 
 function renderNewArticleButton(param){
-  if(!param.userId){
+  if(!getUserId()){
     return '';
   }
 
@@ -241,4 +244,6 @@ function renderNewArticleButton(param){
 
 function logout(){
   PropertiesService.getUserProperties().deleteProperty('userId');
+  const param = {url: ScriptApp.getService().getUrl()};
+  return include('navBar', param);
 }

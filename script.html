@@ -7,4 +7,13 @@
     const form = document.getElementById(formId);
     google.script.run.withSuccessHandler(callBackFunc).processForm(form);
   }
+
+  function logout(){
+    google.script.run.withSuccessHandler(afterLogout).logout();
+  }
+
+  function afterLogout(res){
+    const navBarDiv = document.getElementById('navBarDiv');
+    navBarDiv.innerHTML = res;
+  }
 </script>

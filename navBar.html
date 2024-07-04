@@ -6,7 +6,7 @@
       </h1>
       <div class="dropdown">
         <?
-          if(param.userId){
+          if(getUserId()){
             const dropdown = include('userDropDown', param);
             output.append(dropdown);
           }

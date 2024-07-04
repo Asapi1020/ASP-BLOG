@@ -87,6 +87,10 @@ function sanitizeInput(input) {
   });
 }
 
+function getUserId(){
+  return PropertiesService.getUserProperties().getProperty('userId') || '';
+}
+
 function testGeneratingUUID(){
   Logger.log(generateUUID());
 }

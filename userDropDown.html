@@ -10,7 +10,7 @@
   </button>
   <ul class='dropdown-menu dropdown-menu-end' aria-labelledby='menu'>
     <li>
-      <a href="<?= param.url ?>?page=mypage&id=<?= param.id ?>" class='dropdown-item'>
+      <a href="<?= param.url ?>?page=mypage" class='dropdown-item'>
         マイページ
         <i class='bi-person-fill ms-1'></i>
       </a>
@@ -20,13 +20,3 @@
     </li>
   </ul>
 </div>
-
-<script>
-  function logout(){
-    google.script.run.withSuccessHandler(afterLogout).logout();
-  }
-
-  function afterLogout(){
-
-  }
-</script>

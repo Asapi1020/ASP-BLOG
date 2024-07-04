@@ -16,8 +16,8 @@ function processForm(form) {
       createDatum('comment', comment);
       return loadComments(comment.articleId);
     case 'editUserName':
-      updateUserName(form.userId, form.name);
-      return loadMyPage(form.userId);
+      updateUserName(getUserId(), form.name);
+      return loadMyPage();
     case 'signIn':
       return signIn(form);
     case 'signUp':
@@ -55,7 +55,7 @@ function makeArticleFromForm(form){
 }
 
 function makeCommentFromForm(form){
-  const user = findData('user', {id: form.userId})[0];
+  const user = findData('user', {id: getUserId()})[0];
 
   const datum = {
     id: generateUUID(),
@@ -87,6 +87,11 @@ function signIn(form){
     const user = users[0];
     PropertiesService.getUserProperties().setProperty('userId', user.id);
     res.status = '200'; // success
+
+    const param = {
+      url: ScriptApp.getService().getUrl(),
+    };
+    res.navBar = include('navBar', param);
   }
   else if(users.length === 0){
     res.status = '400'; // not registered yet
@@ -116,7 +121,13 @@ function signUp(form){
     };
 
     createDatum('user', user);
+    PropertiesService.getUserProperties().setProperty('userId', user.id);
     res.status = '200';
+
+    const param = {
+      url: ScriptApp.getService().getUrl(),
+    };
+    res.navBar = include('navBar', param);
   }
   else if(users.length === 1){
     res.status = '400';

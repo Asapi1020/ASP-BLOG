@@ -20,10 +20,27 @@
     // is valid??
     const passwordField = document.getElementById('password');
     
+    const failMessage = document.getElementById('fail-message');
     if(!validPattern.test(passwordField.value)){
-      const failMessage = document.getElementById('fail-message');
       failMessage.classList.remove('invisible');
       return;
+    }
+    else{
+      failMessage.classList.remove('add');
+    }
+
+    // is matched??
+    const form = document.getElementById('signIn');
+    
+    if(form.ensurePassword){
+      const unmatchMessage = document.getElementById('unmatch-message');
+      if(form.ensurePassword.value !== form.password.value){
+        unmatchMessage.classList.remove('invisible');
+        return;
+      }
+      else{
+        unmatchMessage.classList.add('invisible');
+      }
     }
 
     // prevent from doubli clicking
@@ -31,10 +48,13 @@
     submitButton.disabled = true;
 
     // main process
-    const form = document.getElementById('signIn');
-    const dummyForm = document.createElement('form');
-    dummyForm.innerHTML = form.innerHTML;
-    dummyForm.password.value = await hashString(form.password);
+    const hashPassword = await hashString(form.password.value);
+    const dummyForm = {
+      name: form.name.value,
+      password: hashPassword,
+      action: form.action.value
+    };
+    console.log(dummyForm);
     google.script.run.withSuccessHandler(afterSignIn).processForm(dummyForm);
   }
 
@@ -74,7 +94,8 @@
     const ensurePasswordDiv = document.getElementById('ensurePassword');
     ensurePasswordDiv.innerHTML = `
       <label class="form-label">確認用にパスワードを再入力</label>
-      <input class="form-control" type="password" name="ensurePassword" required>`;    
+      <input class="form-control" type="password" name="ensurePassword" required>
+      <span id="unmatch-message" class="text-danger invisible">パスワードが一致しません。</span>`;    
     ensurePasswordDiv.classList.add('mb-3');
 
     // change button text

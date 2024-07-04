@@ -21,7 +21,7 @@ function processForm(form) {
     case 'signIn':
       return signIn(form);
     case 'signUp':
-      return `Success! ${JSON.stringify(form)}`;
+      return signUp(form);
   }
 
   return '500 Error! Something wrong';
@@ -95,5 +95,35 @@ function signIn(form){
     res.status = '500'; // it should not be occured
   }
   
+  return JSON.stringify(res);
+}
+
+function signUp(form){
+  Logger.log(form);
+  const users = findData('user', {
+    name: form.name,
+    password: form.password
+  });
+
+  const res = {type: 'signUp'};
+
+  if(users.length === 0){
+    const user = {
+      id: generateUUID(),
+      name: form.name,
+      password: form.password,
+      createdAt: new Date()
+    };
+
+    createDatum('user', user);
+    res.status = '200';
+  }
+  else if(users.length === 1){
+    res.status = '400';
+  }
+  else{
+    res.status = '500';
+  }
+
   return JSON.stringify(res);
 }

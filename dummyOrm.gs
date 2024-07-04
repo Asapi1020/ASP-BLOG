@@ -46,8 +46,8 @@ function createDatum(sheetName, datum){
   const rowToInsert = dataRange.getLastRow() + 1;
 
   const keys = sheet.getRange(1, 1, 1, colLength).getValues()[0];
-  const sunitizedDatum = sunitizeDatum(datum);
-  const dataList = objectToList(sunitizedDatum, keys);
+  const sanitizedDatum = sanitizeDatum(datum);
+  const dataList = objectToList(sanitizedDatum, keys);
   
   sheet.getRange(rowToInsert, colToInsert, 1, colLength).setValues([dataList]);
   Logger.log(`Create new data ${JSON.stringify(dataList)}`);
@@ -69,19 +69,19 @@ function updateDatum(sheetName, datum, key){
   // Key is Found
   const rowLength = dataRange.getNumRows();
   const keyProperties = sheet.getRange(1, keyIndex+1, rowLength, 1).getValues(); // [ [id], [1], [2] ]
-  const sunitizedDatum = sunitizeDatum(datum);
+  const sanitizedDatum = sanitizeDatum(datum);
   Logger.log(keyProperties);
-  Logger.log(sunitizedDatum[key]);
+  Logger.log(sanitizedDatum[key]);
 
   let i = 0;
   for(i=1; i<keyProperties.length; i++){
-    if(keyProperties[i].length > 0 && keyProperties[i][0] === sunitizedDatum[key]){
+    if(keyProperties[i].length > 0 && keyProperties[i][0] === sanitizedDatum[key]){
       break;
     }
   }
 
   if(i === keyProperties.length){
-    createDatum(sheetName, sunitizedDatum);
+    createDatum(sheetName, sanitizedDatum);
     Logger.log(`Failed to find existing data. Created new one`);
     return;
   }
@@ -90,7 +90,7 @@ function updateDatum(sheetName, datum, key){
   const colToInsert = dataRange.getColumn();
   const rowToInsert = i+1;
 
-  const dataList = objectToList(sunitizedDatum, keys);
+  const dataList = objectToList(sanitizedDatum, keys);
 
   sheet.getRange(rowToInsert, colToInsert, 1, colLength).setValues([dataList]);
   Logger.log(`Update existing data ${JSON.stringify(dataList)}`);
@@ -171,10 +171,12 @@ function objectToList(object, keys){
   return outputList;
 }
 
-function sunitizeDatum(datum){
+function sanitizeDatum(datum){
   const keys = Object.keys(datum);
   for(let key of keys){
-    datum[key] = sunitizeInput(datum[key]);
+    if(typeof(datum[key]) === "string"){
+      datum[key] = sanitizeInput(datum[key]);
+    }
   }
   return datum;
 }

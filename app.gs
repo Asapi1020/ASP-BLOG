@@ -238,3 +238,7 @@ function renderNewArticleButton(param){
 
   return include('newArticleButton', param);
 }
+
+function logout(){
+  PropertiesService.getUserProperties().deleteProperty('userId');
+}

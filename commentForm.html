@@ -1,6 +1,6 @@
 <form id='postComment' onsubmit="handleFormSubmit(event, 'postComment', afterSubmission)">
   <input class='form-control mb-3' type="text" name='comment'/>
-  <input name="userId" type="hidden" value=${param.userId}>
+  <input name="userId" type="hidden" value=${getUserId()}>
   <input name="articleId" type="hidden" value=${param.id}>
   <input name="action" type="hidden" value='postComment'>
   <button type='submit' class='btn btn-outline-secondary mb-3'>コメントを投稿する</button>

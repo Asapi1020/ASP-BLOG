@@ -6,12 +6,9 @@
       </h1>
       <div class="dropdown">
         <?
-          if(param.userId){
-            output.append(`
-              <a class="btn btn-outline-light text-dark" href="${param.url}?page=mypage&id=${param.userId}">
-                マイページ
-                <i class='bi-person-fill ms-1'></i>
-              </a>`);
+          if(getUserId()){
+            const dropdown = include('userDropDown', param);
+            output.append(dropdown);
           }
           else{
             output.append(`

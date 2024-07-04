@@ -1,0 +1,162 @@
+<script>
+  const validPattern = /^[A-Za-z0-9!@*_.-]*$/;
+  // restrict characters
+  document.getElementById('password').addEventListener('input', () => {
+    const passwordField = document.getElementById('password');
+    const errorMessage = document.getElementById('error-message');
+
+    if (!validPattern.test(passwordField.value)) {
+      errorMessage.classList.remove('invisible');
+    }
+    else {
+      errorMessage.classList.add('invisible');
+    }
+  });
+
+  async function handleLogInForm(event) {
+    // prevent form submission from reloading page
+    event.preventDefault();
+
+    // is valid??
+    const passwordField = document.getElementById('password');
+    
+    const failMessage = document.getElementById('fail-message');
+    if(!validPattern.test(passwordField.value)){
+      failMessage.classList.remove('invisible');
+      return;
+    }
+    else{
+      failMessage.classList.remove('add');
+    }
+
+    // is matched??
+    const form = document.getElementById('signIn');
+    
+    if(form.ensurePassword){
+      const unmatchMessage = document.getElementById('unmatch-message');
+      if(form.ensurePassword.value !== form.password.value){
+        unmatchMessage.classList.remove('invisible');
+        return;
+      }
+      else{
+        unmatchMessage.classList.add('invisible');
+      }
+    }
+
+    // prevent from doubli clicking
+    const submitButton = document.getElementById('submitButton');
+    submitButton.disabled = true;
+
+    // main process
+    const hashPassword = await hashString(form.password.value);
+    const dummyForm = {
+      name: form.name.value,
+      password: hashPassword,
+      action: form.action.value
+    };
+    
+    google.script.run.withSuccessHandler(afterSignIn).processForm(dummyForm);
+  }
+
+  function afterSignIn(res){
+    const resJson = JSON.parse(res);
+    const resMsg = document.getElementById('res-message');
+    const submitButton = document.getElementById('submitButton');
+
+    switch(resJson.status){
+      case '200':
+        resMsg.classList.remove('text-danger');
+        resMsg.classList.add('text-success');
+        resMsg.innerHTML = (resJson.type === 'signIn') ? 'ログイン成功！' : '登録完了！';
+
+        const toggleButton = document.getElementById('toggleIsNew');
+        toggleButton.disabled = true;
+
+        refreshNavBar(resJson.navBar);
+        return;
+
+      case '400':
+        resMsg.classList.add('text-danger');
+        resMsg.classList.remove('text-success');
+        resMsg.innerHTML = (resJson.type === 'signIn') ? 'このアカウントは存在しないか、入力情報が誤っています。' : 'このアカウントは既に登録されています。';      
+        submitButton.disabled = false;
+        return;
+
+      case '500':
+        resMsg.classList.add('text-danger');
+        resMsg.classList.remove('text-success');
+        resMsg.innerHTML = '申し訳ありません。予期しないエラーが発生しました。' +
+          ( (resJson.type === 'signIn') ? '運営にご連絡いただくか、新規のアカウントを作成してご利用ください。' : '運営にご連絡ください。' );
+        submitButton.disabled = false;
+        return;
+    }
+    console.log(res);
+  }
+
+  function refreshNavBar(content){
+    const navBarDiv = document.getElementById('navBarDiv');
+    navBarDiv.innerHTML = content;
+  }
+
+  // DOM
+  function startNewRegister(){
+    // show up input to ensure password
+    const ensurePasswordDiv = document.getElementById('ensurePassword');
+    ensurePasswordDiv.innerHTML = `
+      <label class="form-label">確認用にパスワードを再入力</label>
+      <input class="form-control" type="password" name="ensurePassword" required>
+      <span id="unmatch-message" class="text-danger invisible">パスワードが一致しません。</span>`;    
+    ensurePasswordDiv.classList.add('mb-3');
+
+    // change button text
+    const submitButton = document.getElementById('submitButton');
+    submitButton.innerHTML = '新規登録';
+
+    // change state sign in to sign up
+    const isNewUserInput = document.getElementById('bNewUser');
+    isNewUserInput.value="signUp";
+
+    const toggleButton = document.getElementById('toggleIsNew');
+    toggleButton.innerHTML = '登録済みのためログインする';
+    toggleButton.onclick = startSignIn;
+  }
+
+  function startSignIn(){
+    // hide input to ensure password
+    const ensurePasswordDiv = document.getElementById('ensurePassword');
+    ensurePasswordDiv.innerHTML = '';
+    ensurePasswordDiv.classList.remove('mb-3');
+
+    // change button text
+    const submitButton = document.getElementById('submitButton');
+    submitButton.innerHTML = 'ログイン';
+
+    // change state sign in to sign up
+    const isNewUserInput = document.getElementById('bNewUser');
+    isNewUserInput.value="signIn";
+
+    const toggleButton = document.getElementById('toggleIsNew');
+    toggleButton.innerHTML = 'または新規登録';
+    toggleButton.onclick = startNewRegister;
+  }
+
+  /**
+   * Hash a string using SHA-256 algorithm
+   * @param {string} input - The string to be hashed
+   * @return {Promise<string>} - The resulting hash in hexadecimal format
+   */
+  async function hashString(input) {
+    // Encode the input string as a Uint8Array
+    const encoder = new TextEncoder();
+    const data = encoder.encode(input);
+
+    // Hash the data using the SHA-256 algorithm
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+
+    // Convert the hash to a hexadecimal string
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+    
+    return hashHex;
+  };
+</script>

@@ -16,8 +16,12 @@ function processForm(form) {
       createDatum('comment', comment);
       return loadComments(comment.articleId);
     case 'editUserName':
-      updateUserName(form.userId, form.name);
-      return loadMyPage(form.userId);
+      updateUserName(getUserId(), form.name);
+      return loadMyPage();
+    case 'signIn':
+      return signIn(form);
+    case 'signUp':
+      return signUp(form);
   }
 
   return '500 Error! Something wrong';
@@ -51,7 +55,7 @@ function makeArticleFromForm(form){
 }
 
 function makeCommentFromForm(form){
-  const user = findData('user', {id: form.userId})[0];
+  const user = findData('user', {id: getUserId()})[0];
 
   const datum = {
     id: generateUUID(),
@@ -69,4 +73,68 @@ function deleteArticle(paramStr){
   const param = JSON.parse(paramStr);
   deleteDatum('article', {id: param.id});
   return include('deletedArticle', param);
+}
+
+function signIn(form){
+  const users = findData('user', {
+    name: form.name,
+    password: form.password
+  });
+
+  const res = {type: 'signIn'};
+
+  if(users.length === 1){
+    const user = users[0];
+    PropertiesService.getUserProperties().setProperty('userId', user.id);
+    res.status = '200'; // success
+
+    const param = {
+      url: ScriptApp.getService().getUrl(),
+    };
+    res.navBar = include('navBar', param);
+  }
+  else if(users.length === 0){
+    res.status = '400'; // not registered yet
+  }
+  else{
+    res.status = '500'; // it should not be occured
+  }
+  
+  return JSON.stringify(res);
+}
+
+function signUp(form){
+  Logger.log(form);
+  const users = findData('user', {
+    name: form.name,
+    password: form.password
+  });
+
+  const res = {type: 'signUp'};
+
+  if(users.length === 0){
+    const user = {
+      id: generateUUID(),
+      name: form.name,
+      password: form.password,
+      createdAt: new Date()
+    };
+
+    createDatum('user', user);
+    PropertiesService.getUserProperties().setProperty('userId', user.id);
+    res.status = '200';
+
+    const param = {
+      url: ScriptApp.getService().getUrl(),
+    };
+    res.navBar = include('navBar', param);
+  }
+  else if(users.length === 1){
+    res.status = '400';
+  }
+  else{
+    res.status = '500';
+  }
+
+  return JSON.stringify(res);
 }

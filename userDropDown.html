@@ -5,12 +5,18 @@
     id='menu'
     data-bs-toggle='dropdown'
     aria-expanded='false'>
-      Googleログイン中
+      ログイン中
     <i class='bi-person-fill ms-1'></i>
   </button>
   <ul class='dropdown-menu dropdown-menu-end' aria-labelledby='menu'>
     <li>
-      <a href="<?= param.url ?>?page=logout" class='dropdown-item'>Logout</a>
+      <a href="<?= param.url ?>?page=mypage" class='dropdown-item'>
+        マイページ
+        <i class='bi-person-fill ms-1'></i>
+      </a>
+    </li>
+    <li>
+      <button class='dropdown-item' onclick='logout()'>Logout</button>
     </li>
   </ul>
 </div>

@@ -1,0 +1,79 @@
+<script>
+  const validPattern = /^[A-Za-z0-9!@*_.-]*$/;
+  // restrict characters
+  document.getElementById('password').addEventListener('input', () => {
+    const passwordField = document.getElementById('password');
+    const errorMessage = document.getElementById('error-message');
+
+    if (!validPattern.test(passwordField.value)) {
+      errorMessage.classList.remove('invisible');
+    }
+    else {
+      errorMessage.classList.add('invisible');
+    }
+  });
+
+  function handleLogInForm(event) {
+    // prevent form submission from reloading page
+    event.preventDefault();
+
+    // is valid??
+    const passwordField = document.getElementById('password');
+    
+    if(!validPattern.test(passwordField.value)){
+      const failMessage = document.getElementById('fail-message');
+      failMessage.classList.remove('invisible');
+      return;
+    }
+
+    const form = document.getElementById('signIn');
+    google.script.run.withSuccessHandler(afterSignIn).processForm(form);
+  }
+
+  function afterSignIn(res){
+    console.log(res);
+  }
+
+  // DOM
+  function startNewRegister(){
+    // show up input to ensure password
+    const ensurePasswordDiv = document.getElementById('ensurePassword');
+    ensurePasswordDiv.innerHTML = `
+      <label class="form-label">確認用にパスワードを再入力</label>
+      <input class="form-control" type="password" name="ensurePassword" required>`;    
+    ensurePasswordDiv.classList.add('mb-3');
+
+    // change button text
+    const submitButton = document.getElementById('submitButton');
+    submitButton.innerHTML = '新規登録';
+
+    // change state sign in to sign up
+    const isNewUserInput = document.getElementById('bNewUser');
+    isNewUserInput.value="signUp";
+
+    const toggleButton = document.getElementById('toggleIsNew');
+    toggleButton.innerHTML = '登録済みのためログインする';
+    toggleButton.onclick = startSignIn;
+  }
+
+  function startSignIn(){
+    // hide input to ensure password
+    const ensurePasswordDiv = document.getElementById('ensurePassword');
+    ensurePasswordDiv.innerHTML = '';
+    ensurePasswordDiv.classList.remove('mb-3');
+
+    // change button text
+    const submitButton = document.getElementById('submitButton');
+    submitButton.innerHTML = 'ログイン';
+
+    // change state sign in to sign up
+    const isNewUserInput = document.getElementById('bNewUser');
+    isNewUserInput.value="signIn";
+
+    const toggleButton = document.getElementById('toggleIsNew');
+    toggleButton.innerHTML = 'または新規登録';
+    toggleButton.onclick = startNewRegister;
+  }
+  
+  //
+</script>

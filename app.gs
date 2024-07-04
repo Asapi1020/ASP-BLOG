@@ -1,11 +1,11 @@
 function doGet(e) {
-  const userEmail = Session.getActiveUser().getEmail();
+  const userId = PropertiesService.getUserProperties().getProperty('userId') || '';
   const template = HtmlService.createTemplateFromFile('index');
 
   const param = e.parameter;
-  param.page = getFileName(param.page, userEmail);
+  param.page = getFileName(param.page, userId);
   param.url = ScriptApp.getService().getUrl();
-  param.userId = (userEmail) ? ensureUserData(userEmail).id : '';
+  param.userId = userId;
   template.param = param;
 
   const htmlOutput = template.evaluate();
@@ -18,7 +18,7 @@ function doGet(e) {
  * @param {String} page - page parameter in URL
  * @return {String} - HTML file name to open
  */
-function getFileName(page, userEmail){
+function getFileName(page, userId){
   // top page
   if(page === undefined){
     return 'articleList';
@@ -40,7 +40,7 @@ function getFileName(page, userEmail){
   ];
 
   if(privatePageList.includes(page)){
-    if(userEmail){
+    if(userId){
       return page;
     }
     return 'login';

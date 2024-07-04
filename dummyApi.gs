@@ -18,6 +18,9 @@ function processForm(form) {
     case 'editUserName':
       updateUserName(form.userId, form.name);
       return loadMyPage(form.userId);
+    case 'signIn':
+    case 'signUp':
+      return `Success! ${form.action}`;
   }
 
   return '500 Error! Something wrong';

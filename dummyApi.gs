@@ -20,7 +20,7 @@ function processForm(form) {
       return loadMyPage(form.userId);
     case 'signIn':
     case 'signUp':
-      return `Success! ${form.action}`;
+      return `Success! ${JSON.stringify(form)}`;
   }
 
   return '500 Error! Something wrong';

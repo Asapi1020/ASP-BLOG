@@ -13,7 +13,7 @@
     }
   });
 
-  function handleLogInForm(event) {
+  async function handleLogInForm(event) {
     // prevent form submission from reloading page
     event.preventDefault();
 
@@ -27,7 +27,11 @@
     }
 
     const form = document.getElementById('signIn');
-    google.script.run.withSuccessHandler(afterSignIn).processForm(form);
+    const dummyForm = document.createElement('form');
+    dummyForm.innerHTML = form.innerHTML;
+    dummyForm.password.value = await hashString(form.password);
+    google.script.run.withSuccessHandler(afterSignIn).processForm(dummyForm);
+
   }
 
   function afterSignIn(res){
@@ -74,6 +78,24 @@
     toggleButton.innerHTML = 'または新規登録';
     toggleButton.onclick = startNewRegister;
   }
-  
-  //
+
+  /**
+   * Hash a string using SHA-256 algorithm
+   * @param {string} input - The string to be hashed
+   * @return {Promise<string>} - The resulting hash in hexadecimal format
+   */
+  async function hashString(input) {
+    // Encode the input string as a Uint8Array
+    const encoder = new TextEncoder();
+    const data = encoder.encode(input);
+
+    // Hash the data using the SHA-256 algorithm
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+
+    // Convert the hash to a hexadecimal string
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+    
+    return hashHex;
+  };
 </script>

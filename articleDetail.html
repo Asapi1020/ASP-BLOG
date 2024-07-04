@@ -17,7 +17,8 @@
     // markdown
     document.addEventListener('DOMContentLoaded', () => {
       const contentDiv = document.getElementById('articleContent');
-      const markdownContent = marked.parse(contentDiv.innerHTML);
+      const fixedContent = contentDiv.innerHTML.replace(/&lt;br&gt;/g, '<br>')
+      const markdownContent = marked.parse(fixedContent);
       contentDiv.innerHTML = markdownContent;
     });
     

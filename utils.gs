@@ -91,6 +91,21 @@ function getUserId(){
   return PropertiesService.getUserProperties().getProperty('userId') || '';
 }
 
+function removeMarkdownSyntax(text){
+  return text
+    .replace(/(\*\*|__)(.*?)\1/g, '$2') // 太字
+    .replace(/(\*|_)(.*?)\1/g, '$2')   // 斜体
+    .replace(/`([^`]+)`/g, '$1')       // コードブロック
+    .replace(/^\s*#*\s*(.*?)$/gm, '$1')  // 見出し
+    .replace(/!\[(.*?)\]\(.*?\)/g, '$1')// 画像
+    .replace(/\[(.*?)\]\(.*?\)/g, '$1')// リンク
+    .replace(/>\s?(.*)/g, '$1')        // 引用
+    .replace(/^\s*\-\s+/gm, '')        // リスト
+    .replace(/^\s*\d+\.\s+/gm, '')     // 番号付きリスト
+    .replace(/^\s*---+/gm, '')         // 水平線
+    .replace(/\n{2,}/g, '\n\n');       // 余分な改行を1つに
+}
+
 function testGeneratingUUID(){
   Logger.log(generateUUID());
 }

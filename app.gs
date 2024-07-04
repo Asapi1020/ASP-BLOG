@@ -88,7 +88,7 @@ function loadArticleList(bDescent){
               </div>
             </div>
           </div>
-          <p class='card-text lead'>${ article.content.slice(0,140) }</p>
+          <p class='card-text lead'>${ removeMarkdownSyntax(article.content).slice(0,140) }</p>
         </div>
       </a>`;
   }
